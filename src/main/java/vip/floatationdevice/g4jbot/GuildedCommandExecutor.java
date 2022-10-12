@@ -6,5 +6,5 @@ public interface GuildedCommandExecutor
 {
     String getCommandName();
 
-    boolean onCommand(G4JBot bot, ChatMessage msg, String[] args);
+    void onCommand(G4JBot bot, ChatMessage msg, String[] args);
 }
