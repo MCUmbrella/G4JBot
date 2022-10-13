@@ -1,7 +1,5 @@
 package vip.floatationdevice.g4jbot;
 
-import com.google.common.eventbus.Subscribe;
-import vip.floatationdevice.guilded4j.event.GuildedWebSocketClosedEvent;
 import vip.floatationdevice.guilded4j.object.ChatMessage;
 import vip.floatationdevice.guilded4j.object.Embed;
 
@@ -24,11 +22,13 @@ public class G4JBotTest
 
         System.out.println("Starting G4JBot");
         G4JBot b = new G4JBot(token);
-        b.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 59909)));
-        b.setVerbose(true)
-                .setCommandPrefix("/")
-                .addListeningServerId(serverId)
-                .addListeningChannelId(channelId)
+        b.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 59909))); // not necessary
+        b.setVerbose(true) // turn on verbose logging. not necessary
+                .setCommandPrefix("/") // set the command prefix to "/"
+                .addCommandListeningServerId(serverId) // add a server ID to listen for commands
+                .addCommandListeningChannelId(channelId) // add a channel ID to listen for commands
+                // register "/test" command
+                // send an example embed to the channel that the "/test" command belongs to
                 .registerCommand(new GuildedCommandExecutor()
                 {
                     @Override
@@ -57,6 +57,9 @@ public class G4JBotTest
                         }
                     }
                 })
+                // register "/repeat" command
+                // repeat the content after "/repeat"
+                // for example, "/repeat hello world" will cause the bot to send "hello world"
                 .registerCommand(new GuildedCommandExecutor()
                 {
                     @Override
@@ -88,6 +91,8 @@ public class G4JBotTest
                         }
                     }
                 })
+                // register "/exit" command
+                // disconnect the bot when someone sends "/exit"
                 .registerCommand(new GuildedCommandExecutor()
                 {
                     @Override
@@ -99,18 +104,11 @@ public class G4JBotTest
                     @Override
                     public void onCommand(G4JBot bot, ChatMessage msg, String[] args)
                     {
-                        System.out.println(msg.getCreatorId() + " issued command /exit");
+                        System.out.println(msg.getCreatorId() + " issued command '/exit'. Entering shutdown sequence");
                         bot.disconnectWebSocket(true);
                     }
                 })
-                .registerEventListener(new Object()
-                {
-                    @Subscribe
-                    public void onDisconnected(GuildedWebSocketClosedEvent e)
-                    {
-                        System.out.println("Connection closed. Exiting");
-                    }
-                })
+                // connect to the WebSocket server and start listening for events
                 .connectWebSocket(true, null);
         System.out.println("G4JBot started");
     }
