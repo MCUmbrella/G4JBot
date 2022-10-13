@@ -19,10 +19,13 @@ public class G4JBotTest
         serverId = scanner.nextLine();
         System.out.print("channelId: ");
         channelId = scanner.nextLine();
-
         System.out.println("Starting G4JBot");
+
         G4JBot b = new G4JBot(token);
-        b.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 59909))); // not necessary
+
+        // set proxy. not necessary
+        b.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 59909)));
+
         b.setVerbose(true) // turn on verbose logging. not necessary
                 .setCommandPrefix("/") // set the command prefix to "/"
                 .addCommandListeningServerId(serverId) // add a server ID to listen for commands
@@ -105,7 +108,7 @@ public class G4JBotTest
                     public void onCommand(G4JBot bot, ChatMessage msg, String[] args)
                     {
                         System.out.println(msg.getCreatorId() + " issued command '/exit'. Entering shutdown sequence");
-                        bot.disconnectWebSocket(true);
+                        bot.disconnectWebSocket();
                     }
                 })
                 // connect to the WebSocket server and start listening for events
