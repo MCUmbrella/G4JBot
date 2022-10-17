@@ -47,14 +47,14 @@ public class G4JBot extends G4JClient
     }
 
     /**
-     * Set the command prefix of the bot.
+     * Set the command prefix of the bot or disable command handling.
      *
-     * @param pfx The prefix of the command.
-     * @throws IllegalArgumentException if the command prefix is null or empty.
+     * @param pfx The prefix of the command. Set to null to disable command handling.
+     * @throws IllegalArgumentException if the command prefix is empty.
      */
     public G4JBot setCommandPrefix(String pfx)
     {
-        if (pfx == null || pfx.isEmpty()) throw new IllegalArgumentException("Command must be presented");
+        if (pfx != null && pfx.isEmpty()) throw new IllegalArgumentException("Command must be presented");
         this.pfx = pfx;
         return this;
     }
@@ -189,7 +189,7 @@ public class G4JBot extends G4JClient
     private void onChatMessage(ChatMessageCreatedEvent e)
     {
         ChatMessage msg = e.getChatMessage();
-        if (checkMessageLocation(msg) && msg.getContent().startsWith(pfx))
+        if (pfx != null && checkMessageLocation(msg) && msg.getContent().startsWith(pfx))
         {
             // [pfx]cmd arg1 arg2...
             String[] cmd = msg.getContent().substring(pfx.length()).split(" "); // [cmd, arg1, arg2...]
